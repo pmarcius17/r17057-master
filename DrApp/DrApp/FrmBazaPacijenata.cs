@@ -74,9 +74,11 @@ namespace DrApp
         {
             if (dgvPacijenti.CurrentRow != null)
             {
+
                 FrmPovijestBolesti novaForma = new FrmPovijestBolesti();
                 novaForma.ShowDialog();
                 OsvjeziPacijente();
+
             }
         }
     }
