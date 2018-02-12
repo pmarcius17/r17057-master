@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="0f347ec91f7b4185a6320752981084b2" Name="Diagram1" ZoomLevel="108">
+        <EntityTypeShape EntityType="DBModel.Doktori" Width="1.5" PointX="0.75" PointY="3.25" />
+        <EntityTypeShape EntityType="DBModel.Lijekovi" Width="1.5" PointX="3" PointY="8.875" />
+        <EntityTypeShape EntityType="DBModel.Pacijenti" Width="1.5" PointX="3" PointY="3" />
+        <EntityTypeShape EntityType="DBModel.PovijestiPacijenata" Width="1.5" PointX="0.75" PointY="0.75" />
+        <EntityTypeShape EntityType="DBModel.Pregledi" Width="1.5" PointX="5.25" PointY="7.375" />
+        <EntityTypeShape EntityType="DBModel.Recepti" Width="1.5" PointX="5.25" PointY="3.5" />
+        <EntityTypeShape EntityType="DBModel.sysdiagrams" Width="1.5" PointX="7.75" PointY="1.75" />
+        <EntityTypeShape EntityType="DBModel.Uputnice" Width="1.5" PointX="0.75" PointY="8.125" />
+        <AssociationConnector Association="DBModel.FK_Pacijent_Doktor" />
+        <AssociationConnector Association="DBModel.FK_Recepti_Doktori" />
+        <AssociationConnector Association="DBModel.FK_Recepti_Lijekovi" />
+        <AssociationConnector Association="DBModel.FK_Pacijent_PovijestPacijenta" />
+        <AssociationConnector Association="DBModel.FK_Pacijent_Uputnica" />
+        <AssociationConnector Association="DBModel.FK_Pregled_Pacijent" />
+        <AssociationConnector Association="DBModel.FK_Recepti_Pacijenti" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

@@ -1,0 +1,505 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="DBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Doktori">
+          <Key>
+            <PropertyRef Name="doktorId" />
+          </Key>
+          <Property Name="doktorId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ime" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="prezime" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="adresa" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="email" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="korisnicko_ime" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="lozinka" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="lijekId" Type="int" />
+          <Property Name="ponovljena_lozinka" Type="varchar" MaxLength="20" />
+        </EntityType>
+        <EntityType Name="Lijekovi">
+          <Key>
+            <PropertyRef Name="lijekId" />
+          </Key>
+          <Property Name="lijekId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="naziv_lijeka" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="opis_lijeka" Type="varchar" MaxLength="250" />
+        </EntityType>
+        <EntityType Name="Pacijenti">
+          <Key>
+            <PropertyRef Name="pacijentId" />
+          </Key>
+          <Property Name="pacijentId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="doktorId" Type="int" Nullable="false" />
+          <Property Name="ime" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="prezime" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="adresa" Type="varchar" MaxLength="50" />
+          <Property Name="oib" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="datumRodenja" Type="varchar" MaxLength="15" />
+          <Property Name="povijestPacijentaId" Type="int" />
+          <Property Name="uputnicaId" Type="int" />
+        </EntityType>
+        <EntityType Name="PovijestiPacijenata">
+          <Key>
+            <PropertyRef Name="povijestPacijentaId" />
+          </Key>
+          <Property Name="povijestPacijentaId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="biljeske" Type="varchar" MaxLength="500" />
+          <Property Name="datum" Type="date" />
+        </EntityType>
+        <EntityType Name="Pregledi">
+          <Key>
+            <PropertyRef Name="pregledId" />
+          </Key>
+          <Property Name="pregledId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="datum_pregleda" Type="date" Nullable="false" />
+          <Property Name="napomena" Type="varchar" MaxLength="50" />
+          <Property Name="pacijentId" Type="int" />
+        </EntityType>
+        <EntityType Name="Recepti">
+          <Key>
+            <PropertyRef Name="receptId" />
+          </Key>
+          <Property Name="receptId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="datum" Type="date" />
+          <Property Name="doktorId" Type="int" Nullable="false" />
+          <Property Name="pacijentId" Type="int" Nullable="false" />
+          <Property Name="opis" Type="varchar" MaxLength="50" />
+          <Property Name="lijekId" Type="int" />
+        </EntityType>
+        <EntityType Name="sysdiagrams">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="principal_id" Type="int" Nullable="false" />
+          <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="version" Type="int" />
+          <Property Name="definition" Type="varbinary(max)" />
+        </EntityType>
+        <EntityType Name="Uputnice">
+          <Key>
+            <PropertyRef Name="uputnicaId" />
+          </Key>
+          <Property Name="uputnicaId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="datum" Type="date" Nullable="false" />
+          <Property Name="opis" Type="varchar" MaxLength="50" />
+        </EntityType>
+        <Association Name="FK_Pregled_Pacijent">
+          <End Role="Pacijenti" Type="Self.Pacijenti" Multiplicity="0..1" />
+          <End Role="Pregledi" Type="Self.Pregledi" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Pacijenti">
+              <PropertyRef Name="pacijentId" />
+            </Principal>
+            <Dependent Role="Pregledi">
+              <PropertyRef Name="pacijentId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Recepti_Doktori">
+          <End Role="Doktori" Type="Self.Doktori" Multiplicity="1" />
+          <End Role="Recepti" Type="Self.Recepti" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Doktori">
+              <PropertyRef Name="doktorId" />
+            </Principal>
+            <Dependent Role="Recepti">
+              <PropertyRef Name="doktorId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Recepti_Lijekovi">
+          <End Role="Lijekovi" Type="Self.Lijekovi" Multiplicity="0..1" />
+          <End Role="Recepti" Type="Self.Recepti" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Lijekovi">
+              <PropertyRef Name="lijekId" />
+            </Principal>
+            <Dependent Role="Recepti">
+              <PropertyRef Name="lijekId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Recepti_Pacijenti">
+          <End Role="Pacijenti" Type="Self.Pacijenti" Multiplicity="1" />
+          <End Role="Recepti" Type="Self.Recepti" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Pacijenti">
+              <PropertyRef Name="pacijentId" />
+            </Principal>
+            <Dependent Role="Recepti">
+              <PropertyRef Name="pacijentId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="DBModelStoreContainer">
+          <EntitySet Name="Doktori" EntityType="Self.Doktori" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Lijekovi" EntityType="Self.Lijekovi" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Pacijenti" EntityType="Self.Pacijenti" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PovijestiPacijenata" EntityType="Self.PovijestiPacijenata" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Pregledi" EntityType="Self.Pregledi" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Recepti" EntityType="Self.Recepti" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Uputnice" EntityType="Self.Uputnice" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Pregled_Pacijent" Association="Self.FK_Pregled_Pacijent">
+            <End Role="Pacijenti" EntitySet="Pacijenti" />
+            <End Role="Pregledi" EntitySet="Pregledi" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Recepti_Doktori" Association="Self.FK_Recepti_Doktori">
+            <End Role="Doktori" EntitySet="Doktori" />
+            <End Role="Recepti" EntitySet="Recepti" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Recepti_Lijekovi" Association="Self.FK_Recepti_Lijekovi">
+            <End Role="Lijekovi" EntitySet="Lijekovi" />
+            <End Role="Recepti" EntitySet="Recepti" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Recepti_Pacijenti" Association="Self.FK_Recepti_Pacijenti">
+            <End Role="Pacijenti" EntitySet="Pacijenti" />
+            <End Role="Recepti" EntitySet="Recepti" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="DBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="DoktorEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Doktori" EntityType="DBModel.Doktori" />
+          <EntitySet Name="Lijekovi" EntityType="DBModel.Lijekovi" />
+          <EntitySet Name="Pacijenti" EntityType="DBModel.Pacijenti" />
+          <EntitySet Name="PovijestiPacijenata" EntityType="DBModel.PovijestiPacijenata" />
+          <EntitySet Name="Pregledi" EntityType="DBModel.Pregledi" />
+          <EntitySet Name="Recepti" EntityType="DBModel.Recepti" />
+          <EntitySet Name="sysdiagrams" EntityType="DBModel.sysdiagrams" />
+          <EntitySet Name="Uputnice" EntityType="DBModel.Uputnice" />
+          <AssociationSet Name="FK_Pacijent_Doktor" Association="DBModel.FK_Pacijent_Doktor">
+            <End Role="Doktori" EntitySet="Doktori" />
+            <End Role="Pacijenti" EntitySet="Pacijenti" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Recepti_Doktori" Association="DBModel.FK_Recepti_Doktori">
+            <End Role="Doktori" EntitySet="Doktori" />
+            <End Role="Recepti" EntitySet="Recepti" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Recepti_Lijekovi" Association="DBModel.FK_Recepti_Lijekovi">
+            <End Role="Lijekovi" EntitySet="Lijekovi" />
+            <End Role="Recepti" EntitySet="Recepti" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Pacijent_PovijestPacijenta" Association="DBModel.FK_Pacijent_PovijestPacijenta">
+            <End Role="PovijestiPacijenata" EntitySet="PovijestiPacijenata" />
+            <End Role="Pacijenti" EntitySet="Pacijenti" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Pacijent_Uputnica" Association="DBModel.FK_Pacijent_Uputnica">
+            <End Role="Uputnice" EntitySet="Uputnice" />
+            <End Role="Pacijenti" EntitySet="Pacijenti" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Pregled_Pacijent" Association="DBModel.FK_Pregled_Pacijent">
+            <End Role="Pacijenti" EntitySet="Pacijenti" />
+            <End Role="Pregledi" EntitySet="Pregledi" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Recepti_Pacijenti" Association="DBModel.FK_Recepti_Pacijenti">
+            <End Role="Pacijenti" EntitySet="Pacijenti" />
+            <End Role="Recepti" EntitySet="Recepti" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="Doktori">
+          <Key>
+            <PropertyRef Name="doktorId" />
+          </Key>
+          <Property Name="doktorId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ime" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="prezime" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="adresa" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="email" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="korisnicko_ime" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="lozinka" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="lijekId" Type="Int32" />
+          <Property Name="ponovljena_lozinka" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Pacijenti" Relationship="DBModel.FK_Pacijent_Doktor" FromRole="Doktori" ToRole="Pacijenti" />
+          <NavigationProperty Name="Recepti" Relationship="DBModel.FK_Recepti_Doktori" FromRole="Doktori" ToRole="Recepti" />
+        </EntityType>
+        <EntityType Name="Lijekovi">
+          <Key>
+            <PropertyRef Name="lijekId" />
+          </Key>
+          <Property Name="lijekId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="naziv_lijeka" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="opis_lijeka" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Recepti" Relationship="DBModel.FK_Recepti_Lijekovi" FromRole="Lijekovi" ToRole="Recepti" />
+        </EntityType>
+        <EntityType Name="Pacijenti">
+          <Key>
+            <PropertyRef Name="pacijentId" />
+          </Key>
+          <Property Name="pacijentId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="doktorId" Type="Int32" Nullable="false" />
+          <Property Name="ime" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="prezime" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="adresa" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="oib" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="povijestPacijentaId" Type="Int32" />
+          <Property Name="uputnicaId" Type="Int32" />
+          <NavigationProperty Name="Doktori" Relationship="DBModel.FK_Pacijent_Doktor" FromRole="Pacijenti" ToRole="Doktori" />
+          <NavigationProperty Name="PovijestiPacijenata" Relationship="DBModel.FK_Pacijent_PovijestPacijenta" FromRole="Pacijenti" ToRole="PovijestiPacijenata" />
+          <NavigationProperty Name="Uputnice" Relationship="DBModel.FK_Pacijent_Uputnica" FromRole="Pacijenti" ToRole="Uputnice" />
+          <NavigationProperty Name="Pregledi" Relationship="DBModel.FK_Pregled_Pacijent" FromRole="Pacijenti" ToRole="Pregledi" />
+          <NavigationProperty Name="Recepti" Relationship="DBModel.FK_Recepti_Pacijenti" FromRole="Pacijenti" ToRole="Recepti" />
+          <Property Name="datumRodenja" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="PovijestiPacijenata">
+          <Key>
+            <PropertyRef Name="povijestPacijentaId" />
+          </Key>
+          <Property Name="povijestPacijentaId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="biljeske" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Pacijenti" Relationship="DBModel.FK_Pacijent_PovijestPacijenta" FromRole="PovijestiPacijenata" ToRole="Pacijenti" />
+          <Property Name="datum" Type="DateTime" Precision="0" />
+        </EntityType>
+        <EntityType Name="Pregledi">
+          <Key>
+            <PropertyRef Name="pregledId" />
+          </Key>
+          <Property Name="pregledId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="datum_pregleda" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="napomena" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="pacijentId" Type="Int32" />
+          <NavigationProperty Name="Pacijenti" Relationship="DBModel.FK_Pregled_Pacijent" FromRole="Pregledi" ToRole="Pacijenti" />
+        </EntityType>
+        <EntityType Name="Recepti">
+          <Key>
+            <PropertyRef Name="receptId" />
+          </Key>
+          <Property Name="receptId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="datum" Type="DateTime" Precision="0" />
+          <Property Name="doktorId" Type="Int32" Nullable="false" />
+          <Property Name="pacijentId" Type="Int32" Nullable="false" />
+          <Property Name="opis" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="lijekId" Type="Int32" />
+          <NavigationProperty Name="Doktori" Relationship="DBModel.FK_Recepti_Doktori" FromRole="Recepti" ToRole="Doktori" />
+          <NavigationProperty Name="Lijekovi" Relationship="DBModel.FK_Recepti_Lijekovi" FromRole="Recepti" ToRole="Lijekovi" />
+          <NavigationProperty Name="Pacijenti" Relationship="DBModel.FK_Recepti_Pacijenti" FromRole="Recepti" ToRole="Pacijenti" />
+        </EntityType>
+        <EntityType Name="sysdiagrams">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="principal_id" Type="Int32" Nullable="false" />
+          <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="version" Type="Int32" />
+          <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+        </EntityType>
+        <EntityType Name="Uputnice">
+          <Key>
+            <PropertyRef Name="uputnicaId" />
+          </Key>
+          <Property Name="uputnicaId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="datum" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="opis" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Pacijenti" Relationship="DBModel.FK_Pacijent_Uputnica" FromRole="Uputnice" ToRole="Pacijenti" />
+        </EntityType>
+        <Association Name="FK_Pacijent_Doktor">
+          <End Type="DBModel.Doktori" Role="Doktori" Multiplicity="1" />
+          <End Type="DBModel.Pacijenti" Role="Pacijenti" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Doktori">
+              <PropertyRef Name="doktorId" />
+            </Principal>
+            <Dependent Role="Pacijenti">
+              <PropertyRef Name="doktorId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Recepti_Doktori">
+          <End Type="DBModel.Doktori" Role="Doktori" Multiplicity="1" />
+          <End Type="DBModel.Recepti" Role="Recepti" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Doktori">
+              <PropertyRef Name="doktorId" />
+            </Principal>
+            <Dependent Role="Recepti">
+              <PropertyRef Name="doktorId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Recepti_Lijekovi">
+          <End Type="DBModel.Lijekovi" Role="Lijekovi" Multiplicity="0..1" />
+          <End Type="DBModel.Recepti" Role="Recepti" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Lijekovi">
+              <PropertyRef Name="lijekId" />
+            </Principal>
+            <Dependent Role="Recepti">
+              <PropertyRef Name="lijekId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Pacijent_PovijestPacijenta">
+          <End Type="DBModel.PovijestiPacijenata" Role="PovijestiPacijenata" Multiplicity="0..1" />
+          <End Type="DBModel.Pacijenti" Role="Pacijenti" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PovijestiPacijenata">
+              <PropertyRef Name="povijestPacijentaId" />
+            </Principal>
+            <Dependent Role="Pacijenti">
+              <PropertyRef Name="povijestPacijentaId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Pacijent_Uputnica">
+          <End Type="DBModel.Uputnice" Role="Uputnice" Multiplicity="0..1" />
+          <End Type="DBModel.Pacijenti" Role="Pacijenti" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Uputnice">
+              <PropertyRef Name="uputnicaId" />
+            </Principal>
+            <Dependent Role="Pacijenti">
+              <PropertyRef Name="uputnicaId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Pregled_Pacijent">
+          <End Type="DBModel.Pacijenti" Role="Pacijenti" Multiplicity="0..1" />
+          <End Type="DBModel.Pregledi" Role="Pregledi" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Pacijenti">
+              <PropertyRef Name="pacijentId" />
+            </Principal>
+            <Dependent Role="Pregledi">
+              <PropertyRef Name="pacijentId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Recepti_Pacijenti">
+          <End Type="DBModel.Pacijenti" Role="Pacijenti" Multiplicity="1" />
+          <End Type="DBModel.Recepti" Role="Recepti" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Pacijenti">
+              <PropertyRef Name="pacijentId" />
+            </Principal>
+            <Dependent Role="Recepti">
+              <PropertyRef Name="pacijentId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="DBModelStoreContainer" CdmEntityContainer="DoktorEntities">
+          <EntitySetMapping Name="Doktori">
+            <EntityTypeMapping TypeName="DBModel.Doktori">
+              <MappingFragment StoreEntitySet="Doktori">
+                <ScalarProperty Name="ponovljena_lozinka" ColumnName="ponovljena_lozinka" />
+                <ScalarProperty Name="lijekId" ColumnName="lijekId" />
+                <ScalarProperty Name="lozinka" ColumnName="lozinka" />
+                <ScalarProperty Name="korisnicko_ime" ColumnName="korisnicko_ime" />
+                <ScalarProperty Name="email" ColumnName="email" />
+                <ScalarProperty Name="adresa" ColumnName="adresa" />
+                <ScalarProperty Name="prezime" ColumnName="prezime" />
+                <ScalarProperty Name="ime" ColumnName="ime" />
+                <ScalarProperty Name="doktorId" ColumnName="doktorId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Lijekovi">
+            <EntityTypeMapping TypeName="DBModel.Lijekovi">
+              <MappingFragment StoreEntitySet="Lijekovi">
+                <ScalarProperty Name="opis_lijeka" ColumnName="opis_lijeka" />
+                <ScalarProperty Name="naziv_lijeka" ColumnName="naziv_lijeka" />
+                <ScalarProperty Name="lijekId" ColumnName="lijekId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Pacijenti">
+            <EntityTypeMapping TypeName="DBModel.Pacijenti">
+              <MappingFragment StoreEntitySet="Pacijenti">
+                <ScalarProperty Name="datumRodenja" ColumnName="datumRodenja" />
+                <ScalarProperty Name="uputnicaId" ColumnName="uputnicaId" />
+                <ScalarProperty Name="povijestPacijentaId" ColumnName="povijestPacijentaId" />
+                <ScalarProperty Name="oib" ColumnName="oib" />
+                <ScalarProperty Name="adresa" ColumnName="adresa" />
+                <ScalarProperty Name="prezime" ColumnName="prezime" />
+                <ScalarProperty Name="ime" ColumnName="ime" />
+                <ScalarProperty Name="doktorId" ColumnName="doktorId" />
+                <ScalarProperty Name="pacijentId" ColumnName="pacijentId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PovijestiPacijenata">
+            <EntityTypeMapping TypeName="DBModel.PovijestiPacijenata">
+              <MappingFragment StoreEntitySet="PovijestiPacijenata">
+                <ScalarProperty Name="datum" ColumnName="datum" />
+                <ScalarProperty Name="biljeske" ColumnName="biljeske" />
+                <ScalarProperty Name="povijestPacijentaId" ColumnName="povijestPacijentaId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Pregledi">
+            <EntityTypeMapping TypeName="DBModel.Pregledi">
+              <MappingFragment StoreEntitySet="Pregledi">
+                <ScalarProperty Name="pacijentId" ColumnName="pacijentId" />
+                <ScalarProperty Name="napomena" ColumnName="napomena" />
+                <ScalarProperty Name="datum_pregleda" ColumnName="datum_pregleda" />
+                <ScalarProperty Name="pregledId" ColumnName="pregledId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Recepti">
+            <EntityTypeMapping TypeName="DBModel.Recepti">
+              <MappingFragment StoreEntitySet="Recepti">
+                <ScalarProperty Name="lijekId" ColumnName="lijekId" />
+                <ScalarProperty Name="opis" ColumnName="opis" />
+                <ScalarProperty Name="pacijentId" ColumnName="pacijentId" />
+                <ScalarProperty Name="doktorId" ColumnName="doktorId" />
+                <ScalarProperty Name="datum" ColumnName="datum" />
+                <ScalarProperty Name="receptId" ColumnName="receptId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="sysdiagrams">
+            <EntityTypeMapping TypeName="DBModel.sysdiagrams">
+              <MappingFragment StoreEntitySet="sysdiagrams">
+                <ScalarProperty Name="definition" ColumnName="definition" />
+                <ScalarProperty Name="version" ColumnName="version" />
+                <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
+                <ScalarProperty Name="principal_id" ColumnName="principal_id" />
+                <ScalarProperty Name="name" ColumnName="name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Uputnice">
+            <EntityTypeMapping TypeName="DBModel.Uputnice">
+              <MappingFragment StoreEntitySet="Uputnice">
+                <ScalarProperty Name="opis" ColumnName="opis" />
+                <ScalarProperty Name="datum" ColumnName="datum" />
+                <ScalarProperty Name="uputnicaId" ColumnName="uputnicaId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
